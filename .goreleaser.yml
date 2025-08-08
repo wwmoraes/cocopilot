@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+version: 2
+project_name: cocopilot
+before:
+  hooks:
+  - ./.git/hooks/pre-commit
+  - nix flake check -L
+builds:
+- id: cocopilot
+  main: ./cmd/cocopilot
+  binary: bin/cocopilot
+  flags:
+  - -trimpath
+  ldflags:
+  - -s
+  - -w
+  - -buildid=
+  - -X main.version={{.Version}}
+  env:
+  - CGO_ENABLED=0
+  goos:
+  - linux
+  - darwin
+  goarch:
+  - amd64
+  - arm64
+  ignore:
+  - goos: darwin
+    goarch: arm
+  - goos: darwin
+    goarch: amd64
+  - goos: darwin
+    goarch: "386"
+checksum:
+  name_template: 'checksums.txt'
+gomod:
+  proxy: true
+  mod: readonly
+snapshot:
+  version_template: "{{- .RawVersion -}}+{{ .FullCommit }}"
+changelog:
+  disable: true
+release:
+  github:
+    owner: wwmoraes
+    name: cocopilot
+  prerelease: auto
+metadata:
+  mod_timestamp: "{{ .CommitTimestamp }}"
