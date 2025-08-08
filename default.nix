@@ -5,7 +5,7 @@
 
 pkgs.buildGoApplication {
   pname = "cocopilot";
-  version = "0.0.0";
+  version = "0.1.0";
   src =
     with pkgs.lib.fileset;
     toSource {
