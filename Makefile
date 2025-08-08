@@ -34,7 +34,7 @@ delete-passwords:
 .PHONY: dist
 dist: GOFLAGS=
 dist:
-	goreleaser release --clean --snapshot --skip before --release-notes CHANGELOG.md
+	goreleaser release --clean --snapshot --skip archive,before,nfpm,sign --release-notes CHANGELOG.md
 
 .PHONY: release
 release:

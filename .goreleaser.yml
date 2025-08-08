@@ -1,10 +1,12 @@
 # yaml-language-server: $schema=https://goreleaser.com/static/schema.json
 version: 2
-project_name: cocopilot
 before:
   hooks:
   - ./.git/hooks/pre-commit
   - nix flake check -L
+binary_signs:
+- ids:
+  - cocopilot
 builds:
 - id: cocopilot
   main: ./cmd/cocopilot
@@ -21,29 +23,46 @@ builds:
   goos:
   - linux
   - darwin
+  - windows
   goarch:
   - amd64
   - arm64
   ignore:
   - goos: darwin
-    goarch: arm
-  - goos: darwin
     goarch: amd64
-  - goos: darwin
-    goarch: "386"
+  - goos: windows
+    goarch: arm64
+changelog:
+  disable: true
 checksum:
   name_template: 'checksums.txt'
 gomod:
   proxy: true
   mod: readonly
-snapshot:
-  version_template: "{{- .RawVersion -}}+{{ .FullCommit }}"
-changelog:
-  disable: true
+metadata:
+  mod_timestamp: "{{ .CommitTimestamp }}"
+nfpms:
+- id: cocopilot
+  ids:
+  - cocopilot
+  formats:
+  - apk
+  - archlinux
+  - deb
+  - rpm
+  vendor: William Artero
+  homepage: https://github.com/wwmoraes/cocopilot
+  maintainer: William Artero <contact@artero.dev>
+  description: cocopilot fetches API tokens to use GitHub Copilot with any tool
+project_name: cocopilot
 release:
   github:
     owner: wwmoraes
     name: cocopilot
   prerelease: auto
-metadata:
-  mod_timestamp: "{{ .CommitTimestamp }}"
+signs:
+- artifacts: all
+  ids:
+  - cocopilot
+snapshot:
+  version_template: "{{- .RawVersion -}}+{{ .FullCommit }}"
