@@ -8,6 +8,7 @@ rec {
       # keep-sorted start
       pkgs.cocogitto
       pkgs.editorconfig-checker
+      pkgs.gh
       pkgs.git
       pkgs.goEnv
       pkgs.goreleaser
