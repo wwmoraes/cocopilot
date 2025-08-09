@@ -22,16 +22,24 @@ ______________________________________________________________________
 
 ## 🧐 About
 
-> Once upon a time, some "CISO wizards" (believe me, self-entitled) in a
+> Once upon a time, some "CISO wizards" (believe me, self-entitled) in a fabled
 > bureaucratic company decided to allow GitHub Copilot - but only through Visual
 > Studio Code. Such bullshit decision smelled so bad that an engineer set out to
-> find a way to get Copilot tokens to use with other tools such as aichat. This
-> is the end result.
+> find a way to get Copilot tokens to use with other tools through his CLI. This
+> is his legacy.
 
 `cocopilot` is a CLI that [does one thing, and does it well][unix-philosophy]:
 retrieves and refreshes GitHub Copilot tokens for tools to interact with its
 inference APIs. This allows you to feed any tool that supports GitHub Copilot,
 from CLIs to agents and anything in-between.
+
+It stores all tokens in a keyring provided by your OS. That means:
+
+- Secret Service-compatible keyrings on Linux (e.g. GNOME Keyring, KWallet)
+- Keychains on MacOS
+- Credential Manager vaults on Windows
+
+### What's the name (and emojis) about?
 
 The name means two things: first, that it is a co-copilot, as in a third-tier
 pilot. Second, "cocô" means "poop" in Portuguese, which perfectly represents
@@ -40,23 +48,25 @@ place. I bet such "security decision" is for the [greater good][greater-good].
 
 ## 🏁 Getting Started
 
-Using nix: `nix run github:wwmoraes/cocopilot`. Its also available in my NUR.
+Using nix: `nix run github:wwmoraes/cocopilot`. Check the [releases] for a
+precompiled binary or a package for your package manager of choice.
 
 ## 🎈 Usage
 
 Run `cocopilot`, it'll automagically retrieve and return a valid token on the
-standard output; this may be an existing token, a refreshed token or a new one
-after asking you to authenticate.
+standard output; this may be an existing and valid token from the keyring, a
+refreshed token or a new one after asking you to authenticate.
 
-The command is save to use directly as an assignment to environment variables,
-such as `COPILOT_API_KEY` for aichat:
+The command is safe to use directly as an assignment to environment variables,
+for instance `COPILOT_API_KEY` for aichat:
 
 ```shell
 env COPILOT_API_KEY=$(cocopilot) aichat --model copilot:gpt-4.1 hi
 ```
 
-> [!NOTE] aichat in specific requires an openai-compatible client configuration
+> NOTE: aichat in specific requires an openai-compatible client configuration
 > for GitHub Copilot to make the example command above work ;)
 
 [greater-good]: https://www.youtube.com/watch?v=5u8vd_YNbTw
+[releases]: https://github.com/wwmoraes/cocopilot/releases
 [unix-philosophy]: https://www.linfo.org/unix_philosophy.html
