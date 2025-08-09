@@ -12,11 +12,16 @@ $(wildcard cmd/cocopilot/*.go)
 endef
 
 .PHONY: all
-all: bin/cocopilot gomod2nix.toml
+all: build gomod2nix.toml
+
+.PHONY: build
+build: gomod2nix.toml
+build:
+	@nix build --no-link --print-out-paths
 
 .PHONY: check
 check:
-	nix flake check -L
+	@nix flake check --print-build-logs --verbose
 
 .PHONY: clean
 clean:
@@ -35,6 +40,10 @@ delete-passwords:
 dist: GOFLAGS=
 dist:
 	goreleaser release --clean --snapshot --skip archive,before,nfpm,sign --release-notes CHANGELOG.md
+
+.PHONY: generate
+generate:
+	go generate ./...
 
 .PHONY: release
 release:

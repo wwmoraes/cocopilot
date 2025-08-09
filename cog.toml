@@ -29,7 +29,7 @@ script = "make configure generate"
 script = "make check"
 
 [git_hooks.pre-push]
-script = "om ci run --no-link && make dist"
+script = "make build dist"
 
 [changelog]
 authors = [{ signature = "William Artero", username = "wwmoraes" }]
