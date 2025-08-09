@@ -23,12 +23,21 @@ jobs:
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.system }}
     steps:
-    - name: checkout
-      uses: actions/checkout@v4
-    - name: direnv nix
-      uses: JRMurr/direnv-nix-action@v4.2.0
+    - uses: actions/checkout@v4
+    - uses: cachix/install-nix-action@v31
       with:
-        install-nix: true
+        nix_path: nixpkgs=channel:nixos-unstable
+    - uses: cachix/cachix-action@v16
+      with:
+        name: ${{ github.repository_owner }}
+        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+    - uses: JRMurr/direnv-nix-action@v4.2.0
+      with:
+        install-nix: false
         cache-store: true
-    - name: run steps
-      run: om ci
+    - run: nix flake check --print-build-logs --verbose
+    - run: nix build --no-link --print-out-paths
+    - if: github.ref_type == 'tag'
+      run: >-
+        nix build --no-link --print-out-paths
+        | cachix push ${{ github.repository_owner }}
